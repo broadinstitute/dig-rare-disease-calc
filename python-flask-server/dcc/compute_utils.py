@@ -4,6 +4,17 @@ import requests
 import json
 from typing import Dict, Any, List
 
+# COMPUTE LOGIC
+# - For each patient phenotype, hit this to get ranked list of phenotypes back, maybe take all top within 75% of top score?
+#   - N Patient phenotypes -> M pigean phenotypes (with mapping)
+# - For each pigean phenotype, query Pigean endpoint to get combined_D score (probability) and take all genes within 75% of top gene
+# - Now we have N patient phenotypes -> M pigean phenotypes -> K genes
+# - For each patient phenotype, take weighted mean of gene probabilities across all pigean phenotypes weighted 
+#     by semantic match of pigean phenotype to patient phenotype, to get a list of gene probabilities per patient phenotypes (edited) 
+#     (equivalent to normalizing semantic weights to sum to 1 per patient phenotype)
+# - Finally, get two patient-level gene lists: one is max gene probability across all patient phenotypes, 
+#   other is average probability (assume probability is 0.05 if gene is not on list for a patient phenotype) — allow for weighted average if user inputs weights per patient phenotype
+
 
 # constants
 URL_PHENOTYPE_ENBEDDINGS = "https://api.kpndataregistry.org/api/search/phenotypes"
