@@ -26,7 +26,7 @@ KEY_SCORE = 'score'
 
 
 # methods
-def get_rest_phenotype_similarity(term: str, similarity_threshold: float = 0.0):
+def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, percent: float=75.0, log: bool=False):
     """
     Queries the KPN Data Registry phenotype API for a given search term.
     Returns a dictionary with id, description, group, and score.
@@ -47,6 +47,7 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float = 0.0):
         json_data = response.json()
 
         # Extract and type-cast relevant fields
+        entries = []
         for item in json_data.get(KEY_DATA, []):
             try:
                 entry = {
@@ -55,10 +56,24 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float = 0.0):
                     KEY_SCORE: float(item.get(KEY_SCORE, 0.0))
                 }
 
-                result["data"].append(entry)
+                entries.append(entry)
 
             except (ValueError, TypeError) as e:
                 result.get(KEY_LOGS).append(f"Skipping malformed entry: {e}")
+
+        # Filter within specified percent of top score
+        if entries:
+            top_score = max(e[KEY_SCORE] for e in entries)
+            threshold = (float(percent) / 100.0) * top_score
+            filtered = [e for e in entries if e[KEY_SCORE] >= threshold]
+            result[KEY_DATA] = sorted(filtered, key=lambda x: x[KEY_SCORE], reverse=True)
+
+            # log
+            logs.append("using score cutoff of: {}".format(threshold))
+            logs.append("filter: {} to cutoff of: {}".format(len(entries), len(result[KEY_DATA])))
+
+        else:
+            logs.append("No entries found in API response.")
 
     except requests.exceptions.RequestException as e:
         result.get(KEY_LOGS).append(f"Request error: {e}")
