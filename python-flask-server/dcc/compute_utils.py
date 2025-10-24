@@ -177,19 +177,159 @@ def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "
     return result
 
 
+def compute_weighted_gene_scores(
+    phenotypes_json: Dict,
+    pigean_results: Dict[str, Dict]
+) -> Dict[str, List[Dict]]:
+    """
+    Combine per-phenotype PIGEAn gene scores into weighted mean probabilities,
+    weighted by normalized semantic similarity of phenotype to patient phenotype.
+
+    Args:
+        phenotypes_json: dict containing {"data": [{"id": ..., "score": ...}, ...]}
+        pigean_results: dict mapping phenotype_id -> {"data": [{"gene": ..., "score": ...}, ...]}
+
+    Returns:
+        dict with:
+          {
+            "data": [{"gene": "GENE1", "weighted_score": value}, ...],
+            "logs": [...]
+          }
+    """
+    logs = []
+    result = {"data": [], "logs": logs}
+
+    try:
+        # --- Extract and normalize phenotype similarity scores ---
+        phenotype_entries = phenotypes_json.get("data", [])
+        if not phenotype_entries:
+            logs.append("No phenotype entries provided.")
+            return result
+
+        # Normalize scores so they sum to 1 (for weighting)
+        total_score = sum(float(p.get("score", 0.0)) for p in phenotype_entries)
+        if total_score <= 0:
+            logs.append("All phenotype scores are zero or invalid.")
+            return result
+
+        weights = {p["id"]: float(p["score"]) / total_score for p in phenotype_entries}
+        logs.append(f"Normalized weights: {weights}")
+
+        # --- Aggregate gene scores across phenotypes ---
+        combined_scores = {}
+
+        for phenotype_id, weight in weights.items():
+            data_block = pigean_results.get(phenotype_id, {}).get("data", [])
+            if not data_block:
+                logs.append(f"No gene data found for phenotype '{phenotype_id}'.")
+                continue
+
+            for entry in data_block:
+                try:
+                    gene = str(entry.get("gene", "")).strip()
+                    score = float(entry.get("score", 0.0))
+                    if not gene:
+                        continue
+
+                    # Accumulate weighted score
+                    combined_scores[gene] = combined_scores.get(gene, 0.0) + score * weight
+                except (ValueError, TypeError):
+                    logs.append(f"Skipping malformed gene entry in {phenotype_id}: {entry}")
+
+        # --- Prepare sorted output ---
+        result["data"] = [
+            {"gene": g, "weighted_score": s}
+            for g, s in sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)
+        ]
+
+    except Exception as e:
+        logs.append(f"Error computing weighted gene scores: {e}")
+
+    return result
+
+
+def process_patient_phenotypes(
+    list_input_phenotypes: List[str], debug: bool=False) -> Dict[str, List[Dict]]:
+    """
+    Combine per-phenotype PIGEAn gene scores into weighted mean probabilities,
+    weighted by normalized semantic similarity of phenotype to patient phenotype.
+
+    Args:
+        phenotypes_json: dict containing {"data": [{"id": ..., "score": ...}, ...]}
+        pigean_results: dict mapping phenotype_id -> {"data": [{"gene": ..., "score": ...}, ...]}
+
+    Returns:
+        dict with:
+          {
+            "data": [{"gene": "GENE1", "weighted_score": value}, ...],
+            "logs": [...]
+          }
+    """
+    # initialize
+    map_patient_pigean_phenotypes = {}
+    map_pigean_phenotype_genes = {}
+    map_patient_phenotype_gene_weights = {}
+
+    # for each patient phenotype, get the similarity scores for pigean phenotypes
+    for phenotype_patient in list_input_phenotypes:
+        map_patient_pigean_phenotypes[phenotype_patient] = get_rest_phenotype_similarity(term=phenotype_patient)
+
+    # debug log
+    if debug:
+        print("got patient phenotype to pigean map: \n{}".format(json.dumps(map_patient_pigean_phenotypes, indent=2)))
+
+    # build a map of the distinct pigean phenotypes and their gene scores
+    for row_patient in map_patient_pigean_phenotypes.values():
+        for row_pigean in row_patient.get(KEY_DATA):
+            pigean_phenotype_id = row_pigean.get(KEY_ID)
+            if not map_pigean_phenotype_genes.get(pigean_phenotype_id):
+                map_pigean_phenotype_genes[pigean_phenotype_id] = get_rest_genes_for_pigean_phenotype(term=pigean_phenotype_id)
+
+    # for each patient phenotype, get the weighted gene scores
+    for phenotype_patient in map_patient_pigean_phenotypes.keys():
+        map_patient_phenotype_gene_weights[phenotype_patient] = compute_weighted_gene_scores(phenotypes_json=map_patient_pigean_phenotypes.get(phenotype_patient), 
+                                                                                             pigean_results=map_pigean_phenotype_genes)
+    # debug log
+    if debug:
+        print("got patient phenotype to gene map: \n{}".format(json.dumps(map_patient_phenotype_gene_weights, indent=2)))
+
+    # TODO: return 2 lists
+    return map_patient_phenotype_gene_weights
+
+
+
+
 
 # main
 if __name__ == "__main__":
-    # test the similarity embeddings REST
-    result_phenotypes = get_rest_phenotype_similarity(term='diabetes')
+    # list of phenotypes
+    list_patient_phenotypes = ['diabetes', 'gout']
 
-    # print
-    print(json.dumps(result_phenotypes, indent=2))
+    # get the weighted gene list for each phenotype
+    map_result = process_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
 
-    # test the pigean call per phenotype
-    result_genes = get_rest_genes_for_pigean_phenotype(term='IBD')
 
-    # print
-    print(json.dumps(result_genes, indent=2))
+
+
+    # # test the similarity embeddings REST
+    # result_phenotypes = get_rest_phenotype_similarity(term='diabetes')
+
+    # # print
+    # print(json.dumps(result_phenotypes, indent=2))
+
+    # # test the pigean call per phenotype
+    # result_genes = {}
+    # for row in result_phenotypes.get(KEY_DATA):
+    #     result_genes[row.get('id')] = get_rest_genes_for_pigean_phenotype(term=row.get('id'))
+
+    # # print
+    # print(json.dumps(result_genes, indent=2))
+
+    # # get the weighted list for a patient phentype
+    # result_weighted_genes = compute_weighted_gene_scores(phenotypes_json=result_phenotypes, pigean_results=result_genes)
+
+    # # print
+    # print(json.dumps(result_weighted_genes, indent=2))
+
 
 
