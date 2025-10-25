@@ -297,6 +297,74 @@ def process_patient_phenotypes(
     return map_patient_phenotype_gene_weights
 
 
+from typing import Dict, Any
+import json
+
+def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], default_prob: float = 0.05) -> Dict[str, Any]:
+    """
+    Given a mapping of phenotype -> list of genes with weighted_score,
+    returns two aggregated patient-level gene lists:
+      1. max gene probability across all phenotypes
+      2. average gene probability (assigning default_prob if gene missing)
+    """
+
+    logs = []
+    result = {"max_genes": [], "avg_genes": [], "logs": logs}
+
+    try:
+        # --- Step 1: Collect phenotype-level data ---
+        phenotype_genes = {}  # phenotype -> {gene: score}
+        for phenotype, pdata in phenotype_gene_map.items():
+            pgenes = {}
+            for entry in pdata.get("data", []):
+                try:
+                    gene = str(entry.get("gene", "")).strip()
+                    score = float(entry.get("weighted_score", 0.0))
+                    if gene:
+                        pgenes[gene] = score
+                except (ValueError, TypeError):
+                    logs.append(f"Skipping malformed entry in {phenotype}: {entry}")
+            phenotype_genes[phenotype] = pgenes
+
+        if not phenotype_genes:
+            logs.append("No phenotype gene data found.")
+            return result
+
+        # --- Step 2: Determine all unique genes across phenotypes ---
+        all_genes = set()
+        for gmap in phenotype_genes.values():
+            all_genes.update(gmap.keys())
+
+        # --- Step 3: Compute per-gene aggregates ---
+        max_scores = {}
+        avg_scores = {}
+
+        n_phenotypes = len(phenotype_genes)
+        for gene in all_genes:
+            # collect all phenotype scores (default if missing)
+            scores = [phenotype_genes[p].get(gene, default_prob) for p in phenotype_genes]
+
+            # compute metrics
+            max_scores[gene] = max(scores)
+            avg_scores[gene] = sum(scores) / n_phenotypes
+
+        # --- Step 4: Sort results descending by score ---
+        result["max_genes"] = [
+            {"gene": g, "max_score": s}
+            for g, s in sorted(max_scores.items(), key=lambda x: x[1], reverse=True)
+        ]
+        result["avg_genes"] = [
+            {"gene": g, "avg_score": s}
+            for g, s in sorted(avg_scores.items(), key=lambda x: x[1], reverse=True)
+        ]
+
+        logs.append(f"Processed {len(phenotype_genes)} phenotypes, {len(all_genes)} unique genes.")
+
+    except Exception as e:
+        logs.append(f"Error combining gene probabilities: {e}")
+
+    # --- single return point ---
+    return result
 
 
 
@@ -306,8 +374,11 @@ if __name__ == "__main__":
     list_patient_phenotypes = ['diabetes', 'gout']
 
     # get the weighted gene list for each phenotype
-    map_result = process_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
+    map_patient_result = process_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
 
+    # get the two genes lists from the above result
+    map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result)
+    print("got final gene scores: \n{}".format(json.dumps(map_gene_scores, indent=2)))
 
 
 
