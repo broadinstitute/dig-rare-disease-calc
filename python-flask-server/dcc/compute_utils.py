@@ -367,17 +367,33 @@ def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], defau
     return result
 
 
+def process_web_patient_phenotypes(
+    list_input_phenotypes: List[str], debug: bool=False) -> Dict[str, List[Dict]]:
+    '''
+    handles the list of phenotypes from the REST call
+    '''
+    # get the weighted gene list for each phenotype
+    map_patient_result = process_patient_phenotypes(list_input_phenotypes=list_input_phenotypes, debug=debug)
+
+    # get the two genes lists from the above result
+    map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result)
+
+    # return
+    return map_gene_scores
+
 
 # main
 if __name__ == "__main__":
     # list of phenotypes
-    list_patient_phenotypes = ['diabetes', 'gout']
+    list_patient_phenotypes = ['diabetes', 'arthritis']
 
-    # get the weighted gene list for each phenotype
-    map_patient_result = process_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
+    # # get the weighted gene list for each phenotype
+    # map_patient_result = process_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
 
-    # get the two genes lists from the above result
-    map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result)
+    # # get the two genes lists from the above result
+    # map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result)
+
+    map_gene_scores = process_web_patient_phenotypes(list_input_phenotypes=list_patient_phenotypes, debug=True)
     print("got final gene scores: \n{}".format(json.dumps(map_gene_scores, indent=2)))
 
 

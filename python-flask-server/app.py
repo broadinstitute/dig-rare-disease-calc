@@ -21,11 +21,18 @@ MAX_NUMBER_GENE_SETS_FOR_COMPUTATION=100
 
 def process_phenotypes(phenotype_list):
     """
-    Example placeholder function to process phenotypes.
-    Replace this with your real computation or analysis function.
+    gets the gene scores from the compute module
     """
-    # For demo: just echo back uppercase names
-    return [p.upper() for p in phenotype_list]
+    # # For demo: just echo back uppercase names
+    # return [p.upper() for p in phenotype_list]
+    # log
+    logger.info("got input phenotype list: {}".format(phenotype_list))
+
+    # get the gene scores
+    map_gene_scores = cutils.process_web_patient_phenotypes(list_input_phenotypes=phenotype_list, debug=True)
+
+    # return
+    return map_gene_scores
 
 
 @app.route('/gene_scores', methods=['GET', 'POST'])
