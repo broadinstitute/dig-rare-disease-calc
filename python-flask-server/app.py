@@ -10,15 +10,10 @@ DEBUG=False
 
 # variables
 app = Flask(__name__)
-app.secret_key = "test_app_gpt"
-map_gene_set_families = {}
-
+app.secret_key = "test_app_gene_scores"
 logger = dutils.get_logger(__name__)
-# p_value_cutoff = 0.3
-P_VALUE_CUTOFF = 0.3
-# p_value_cutoff = 0.05
-MAX_NUMBER_GENE_SETS_FOR_COMPUTATION=100
 
+# methods
 def process_phenotypes(phenotype_list):
     """
     gets the gene scores from the compute module
