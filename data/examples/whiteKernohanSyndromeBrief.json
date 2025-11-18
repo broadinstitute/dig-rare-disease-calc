@@ -1,0 +1,181 @@
+{
+  "phenotypes": [
+    "Tented upper lip vermilion",
+    "Dysplastic corpus callosum",
+    "Hypotonia",
+    "Short nose",
+    "Horseshoe kidney",
+    "Gastro-esophageal reflux",
+    "Nystagmus",
+    "Long palpebral fissure",
+    "Retrognathia",
+    "Intellectual disability",
+    "Hip dysplasia",
+    "Thick eyebrow",
+    "Joint laxity",
+    "Obstructive sleep apnea",
+    "Midface retrusion",
+    "Hypotelorism",
+    "Long eyelashes",
+    "Macrotia",
+    "Low-set ears",
+    "Upslanted palpebral fissure",
+    "Anteverted nares",
+    "Anxiety",
+    "Thin upper lip vermilion"
+  ],
+  "detailed": [
+    {
+      "id": "HP:0010804",
+      "label": "Tented upper lip vermilion"
+    },
+    {
+      "id": "HP:0006989",
+      "label": "Dysplastic corpus callosum"
+    },
+    {
+      "id": "HP:0001252",
+      "label": "Hypotonia"
+    },
+    {
+      "id": "HP:0003196",
+      "label": "Short nose"
+    },
+    {
+      "id": "HP:0003593",
+      "label": null
+    },
+    {
+      "id": "HP:0000085",
+      "label": "Horseshoe kidney"
+    },
+    {
+      "id": "HP:0002020",
+      "label": "Gastro-esophageal reflux"
+    },
+    {
+      "id": "HP:0012745",
+      "label": null
+    },
+    {
+      "id": "HP:0000639",
+      "label": "Nystagmus"
+    },
+    {
+      "id": "HP:0011463",
+      "label": null
+    },
+    {
+      "id": "HP:0020045",
+      "label": null
+    },
+    {
+      "id": "HP:0000637",
+      "label": "Long palpebral fissure"
+    },
+    {
+      "id": "HP:0000278",
+      "label": "Retrognathia"
+    },
+    {
+      "id": "HP:0001249",
+      "label": "Intellectual disability"
+    },
+    {
+      "id": "HP:0020206",
+      "label": null
+    },
+    {
+      "id": "HP:0001385",
+      "label": "Hip dysplasia"
+    },
+    {
+      "id": "HP:0000574",
+      "label": "Thick eyebrow"
+    },
+    {
+      "id": "HP:0001388",
+      "label": "Joint laxity"
+    },
+    {
+      "id": "HP:0002870",
+      "label": "Obstructive sleep apnea"
+    },
+    {
+      "id": "HP:0000293",
+      "label": null
+    },
+    {
+      "id": "HP:0011800",
+      "label": "Midface retrusion"
+    },
+    {
+      "id": "HP:0011330",
+      "label": null
+    },
+    {
+      "id": "HP:0000601",
+      "label": "Hypotelorism"
+    },
+    {
+      "id": "HP:0000403",
+      "label": null
+    },
+    {
+      "id": "HP:0000527",
+      "label": "Long eyelashes"
+    },
+    {
+      "id": "HP:0000400",
+      "label": "Macrotia"
+    },
+    {
+      "id": "HP:0000006",
+      "label": null
+    },
+    {
+      "id": "HP:0000369",
+      "label": "Low-set ears"
+    },
+    {
+      "id": "HP:0000126",
+      "label": null
+    },
+    {
+      "id": "HP:0000143",
+      "label": null
+    },
+    {
+      "id": "HP:0000582",
+      "label": "Upslanted palpebral fissure"
+    },
+    {
+      "id": "HP:0000463",
+      "label": "Anteverted nares"
+    },
+    {
+      "id": "HP:0034003",
+      "label": null
+    },
+    {
+      "id": "HP:0000739",
+      "label": "Anxiety"
+    },
+    {
+      "id": "HP:0000219",
+      "label": "Thin upper lip vermilion"
+    },
+    {
+      "id": "HP:0000537",
+      "label": null
+    },
+    {
+      "id": "HP:0001545",
+      "label": null
+    },
+    {
+      "id": "HP:0000154",
+      "label": null
+    }
+  ]
+}
