@@ -1,0 +1,426 @@
+{
+  "EIF3F": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 6.214869197291068,
+    "min_score": 0.11434759521218715,
+    "phenotypes": [
+      "Inborn genetic diseases",
+      "Intellectual developmental disorder, autosomal recessive 67",
+      "Intellectual disability",
+      "Neurodevelopmental disorder",
+      "Neurodevelopmental disorder with dysmorphic facies and distal limb anomalies"
+    ]
+  },
+  "AFG2B": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 5.84386852051981,
+    "min_score": 0.1901937984496124,
+    "phenotypes": [
+      "Hearing loss, autosomal recessive 119",
+      "Inborn genetic diseases",
+      "Neurodevelopmental delay",
+      "Neurodevelopmental disorder with hearing loss and spasticity",
+      "SPATA5L1-associated disorder"
+    ]
+  },
+  "EBF3": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 4.6212461119751165,
+    "min_score": 0.29149494556765143,
+    "phenotypes": [
+      "Ataxia",
+      "Expressive language delay",
+      "Global developmental delay",
+      "Hypotonia",
+      "Hypotonia, ataxia, and delayed development syndrome",
+      "Inborn genetic diseases",
+      "Intellectual disability",
+      "Isolated Pierre-Robin syndrome"
+    ]
+  },
+  "CLASP1": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 1.4491903514076463,
+    "min_score": 0.11686865887253914,
+    "phenotypes": [
+      "Hydrocephalus, nonsyndromic, autosomal recessive 1",
+      "Lowry-Wood syndrome",
+      "Osteodysplastic primordial dwarfism, type 1",
+      "RNU4ATAC spectrum disorder",
+      "RNU4ATAC-related disorder",
+      "RNU4ATAC-related spliceosomopathies",
+      "Retinal disorders",
+      "Roifman syndrome"
+    ]
+  },
+  "ALPL": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 5.182000834483423,
+    "min_score": 0.2767249111864843,
+    "phenotypes": [
+      "Adult hypophosphatasia",
+      "Childhood hypophosphatasia",
+      "Hypophosphatasia",
+      "Inborn genetic diseases",
+      "Infantile hypophosphatasia",
+      "Odontohypophosphatasia",
+      "Osteogenesis imperfecta"
+    ]
+  },
+  "CLCN6": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 1.7419203820557896,
+    "min_score": 0.11952309939429849,
+    "phenotypes": [
+      "Abnormal speech pattern",
+      "Abnormality of temperature regulation",
+      "Abnormality of the respiratory system",
+      "Abnormality of the skin",
+      "Abnormality of vision",
+      "EEG abnormality",
+      "Feeding difficulties",
+      "Global developmental delay",
+      "Hypotonia",
+      "Motor delay",
+      "Movement disorder",
+      "Neurodegeneration, childhood-onset, with hypotonia, respiratory insufficiency, and brain imaging abnormalities",
+      "Neurogenic bladder"
+    ]
+  },
+  "GH-LCR": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 3.5802594309257105,
+    "min_score": 0.37181665466762653,
+    "phenotypes": [
+      "Congenital myasthenic syndrome 16",
+      "Congenital myopathy 22A, classic",
+      "Congenital myopathy 22B, severe fetal",
+      "Hyperkalemic periodic paralysis",
+      "Hypokalemic periodic paralysis, type 2",
+      "Myopathy",
+      "Paramyotonia congenita of Von Eulenburg",
+      "Potassium-aggravated myotonia",
+      "Severe neonatal hypotonia improving with age"
+    ]
+  },
+  "SCN4A": {
+    "index": 24,
+    "pct_of_max": 51.88075999999574,
+    "max_score": 3.5802594309257105,
+    "min_score": 0.37181665466762653,
+    "avg_score": 1.2490798244418044,
+    "gene_score": 1.8574658027357813,
+    "phenotypes": [
+      "Congenital myasthenic syndrome 16",
+      "Congenital myopathy 22A, classic",
+      "Congenital myopathy 22B, severe fetal",
+      "Hyperkalemic periodic paralysis",
+      "Hypokalemic periodic paralysis, type 2",
+      "Myopathy",
+      "Paramyotonia congenita of Von Eulenburg",
+      "Potassium-aggravated myotonia",
+      "Severe neonatal hypotonia improving with age"
+    ]
+  },
+  "PMP22": {
+    "index": 137,
+    "pct_of_max": 8.750912831257402,
+    "max_score": 4.410021252563879,
+    "min_score": 0.18988173901257158,
+    "avg_score": 0.8062449286052565,
+    "gene_score": 0.3859171156517908,
+    "phenotypes": [
+      "Charcot-Marie-Tooth disease",
+      "Charcot-Marie-Tooth disease type 1E",
+      "Charcot-Marie-Tooth disease, type I",
+      "Charcot-Marie-Tooth disease, type IA",
+      "Dejerine-Sottas disease",
+      "Guillain-Barre syndrome, familial",
+      "Hereditary liability to pressure palsies",
+      "Roussy-L\u00e9vy syndrome",
+      "Tip-toe gait"
+    ]
+  },
+  "ATP6V0A1": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 2.453846153846154,
+    "min_score": 0.08468791754151558,
+    "phenotypes": [
+      "Autism",
+      "Cerebellar ataxia",
+      "Developmental and epileptic encephalopathy 104",
+      "Focal-onset seizure",
+      "Global developmental delay",
+      "Hypotonia",
+      "Inborn genetic diseases",
+      "Intellectual disability",
+      "Large for gestational age",
+      "Lower limb spasticity",
+      "Microcephaly",
+      "Seizure",
+      "Severe global developmental delay"
+    ]
+  },
+  "NPHP3-ACAD11": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 2.9679607036714506,
+    "min_score": 0.1468900231362922,
+    "phenotypes": [
+      "Developmental and epileptic encephalopathy",
+      "Developmental and epileptic encephalopathy, 44",
+      "Intellectual disability",
+      "Spinocerebellar ataxia, autosomal recessive 24",
+      "UBA5-related disorder"
+    ]
+  },
+  "SPG7": {
+    "index": 81,
+    "pct_of_max": 37.6013817289439,
+    "max_score": 3.0828283807303545,
+    "min_score": 0.0712600407624985,
+    "avg_score": 0.7644153275368661,
+    "gene_score": 1.1591860674866405,
+    "phenotypes": [
+      "Cerebral cortical atrophy",
+      "Dysarthria",
+      "Frontotemporal dementia and/or amyotrophic lateral sclerosis 2",
+      "Gait ataxia",
+      "Hereditary ataxia",
+      "Hereditary spastic paraplegia",
+      "Hereditary spastic paraplegia 7",
+      "Inborn genetic diseases",
+      "Intellectual disability",
+      "Optic nerve hypoplasia",
+      "Retinal dystrophy",
+      "Spastic Paraplegia, Recessive",
+      "Spastic paraparesis"
+    ]
+  },
+  "PEX6": {
+    "index": 7,
+    "pct_of_max": 91.23076923076923,
+    "max_score": 6.5,
+    "min_score": 1.6960000000000004,
+    "avg_score": 2.3850172413793103,
+    "gene_score": 5.93,
+    "phenotypes": [
+      "Heimler syndrome 2",
+      "Inborn genetic diseases",
+      "Peroxisome biogenesis disorder",
+      "Peroxisome biogenesis disorder 4A (Zellweger)",
+      "Peroxisome biogenesis disorder 4B"
+    ]
+  },
+  "WDR37": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 3.5183710185104973,
+    "min_score": 0.11611102568045518,
+    "phenotypes": [
+      "Congenital cerebellar hypoplasia",
+      "Congenital ocular coloboma",
+      "Developmental delay",
+      "Dysmorphism",
+      "Epilepsy",
+      "Intellectual disability",
+      "Neurooculocardiogenitourinary syndrome"
+    ]
+  },
+  "COL1A2": {
+    "index": 1,
+    "pct_of_max": 97.32045245552503,
+    "max_score": 8.01068662869386,
+    "min_score": 0.2709476848893278,
+    "avg_score": 1.7372221776346777,
+    "gene_score": 7.796036471839108,
+    "phenotypes": [
+      "Cardiovascular phenotype",
+      "Connective tissue disorder",
+      "Ehlers-Danlos syndrome, arthrochalasia type, 2",
+      "Ehlers-Danlos syndrome, classic type, 1",
+      "Osteogenesis imperfecta",
+      "Osteogenesis imperfecta type I",
+      "Predisposition to dissection"
+    ]
+  },
+  "POLGARF": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 3.196666666666667,
+    "min_score": 0.49143765351827756,
+    "phenotypes": [
+      "Inborn genetic diseases",
+      "Mitochondrial DNA depletion syndrome",
+      "Mitochondrial disease",
+      "POLG-Related Spectrum Disorders",
+      "Primary progressive multiple sclerosis",
+      "Progressive sclerosing poliodystrophy"
+    ]
+  },
+  "CCDST": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 5.264775094927253,
+    "min_score": 0.2671428571428572,
+    "phenotypes": [
+      "Atopic eczema",
+      "Dermatitis, atopic",
+      "Dermatitis, atopic, 2",
+      "Eczematoid dermatitis",
+      "FLG-related disorder",
+      "Ichthyosis vulgaris",
+      "Inborn genetic diseases"
+    ]
+  },
+  "TTN-AS1": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 4.034246501061848,
+    "min_score": 0.10997434191770412,
+    "phenotypes": [
+      "Autosomal recessive limb-girdle muscular dystrophy type 2J",
+      "Autosomal recessive titinopathy",
+      "Cardiomyopathy",
+      "Cardiovascular phenotype",
+      "Dilated cardiomyopathy 1G",
+      "Early-onset myopathy with fatal cardiomyopathy",
+      "Myopathy, myofibrillar, 9, with early respiratory failure",
+      "Primary dilated cardiomyopathy",
+      "Primary familial dilated cardiomyopathy",
+      "Tibial muscular dystrophy"
+    ]
+  },
+  "SLC4A1": {
+    "index": 0,
+    "pct_of_max": 100.0,
+    "max_score": 1.8336363636363642,
+    "min_score": 0.27545454545454534,
+    "avg_score": 0.9064174682384706,
+    "gene_score": 1.8336363636363642,
+    "phenotypes": [
+      "Autosomal dominant distal renal tubular acidosis",
+      "BLOOD GROUP--DIEGO SYSTEM",
+      "BLOOD GROUP--FROESE",
+      "BLOOD GROUP--SWANN SYSTEM",
+      "BLOOD GROUP--WALDNER TYPE",
+      "BLOOD GROUP--WRIGHT ANTIGEN",
+      "Cryohydrocytosis",
+      "Hereditary spherocytosis type 4",
+      "Malaria, susceptibility to",
+      "Renal tubular acidosis, distal, 4, with hemolytic anemia",
+      "Southeast Asian ovalocytosis"
+    ]
+  },
+  "NLRP3": {
+    "index": 1,
+    "pct_of_max": 91.52746178249726,
+    "max_score": 5.254857718193056,
+    "min_score": 0.34810269360269364,
+    "avg_score": 1.1713998604496456,
+    "gene_score": 4.809637889743756,
+    "phenotypes": [
+      "Autoinflammatory syndrome",
+      "Chronic infantile neurological, cutaneous and articular syndrome",
+      "Cryopyrin associated periodic syndrome",
+      "Familial amyloid nephropathy with urticaria AND deafness",
+      "Familial cold autoinflammatory syndrome 1"
+    ]
+  },
+  "TANGO2": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 3.0433333333333334,
+    "min_score": 0.545,
+    "phenotypes": [
+      "Acute rhabdomyolysis",
+      "Cardiac arrhythmia",
+      "Episodic flaccid weakness",
+      "Intellectual disability",
+      "Recurrent metabolic encephalomyopathic crises-rhabdomyolysis-cardiac arrhythmia-intellectual disability syndrome",
+      "Seizure"
+    ]
+  },
+  "SLC2A1": {
+    "index": 17,
+    "pct_of_max": 86.49669107631604,
+    "max_score": 2.2203262717368033,
+    "min_score": 0.14807803273787282,
+    "avg_score": 0.801505590974552,
+    "gene_score": 1.9205087561504683,
+    "phenotypes": [
+      "Childhood onset GLUT1 deficiency syndrome 2",
+      "Dystonia 9",
+      "Encephalopathy due to GLUT1 deficiency",
+      "Epilepsy, idiopathic generalized, susceptibility to, 12",
+      "Hereditary cryohydrocytosis with reduced stomatin"
+    ]
+  },
+  "LOC123864065": {
+    "index": -1,
+    "pct_of_max": 0.0,
+    "max_score": 10.19651465850501,
+    "min_score": 0.8182447650069798,
+    "phenotypes": [
+      "Congenital muscular dystrophy due to partial LAMA2 deficiency",
+      "Inborn genetic diseases",
+      "LAMA2-related muscular dystrophy",
+      "Limb-girdle muscular dystrophy",
+      "Merosin deficient congenital muscular dystrophy"
+    ]
+  },
+  "ERF": {
+    "index": 160,
+    "pct_of_max": 17.863683147819778,
+    "max_score": 4.788108020974468,
+    "min_score": 0.8325440237226278,
+    "avg_score": 2.119109718668964,
+    "gene_score": 0.8553324456422231,
+    "phenotypes": [
+      "Chitayat syndrome",
+      "Craniosynostosis 4",
+      "Inborn genetic diseases",
+      "Noonan-like syndrome",
+      "TWIST1-related craniosynostosis"
+    ]
+  },
+  "ERCC4": {
+    "index": 0,
+    "pct_of_max": 100.0,
+    "max_score": 7.9957780102022085,
+    "min_score": 0.215123180647957,
+    "avg_score": 1.3563153239576502,
+    "gene_score": 7.9957780102022085,
+    "phenotypes": [
+      "Breast carcinoma",
+      "Cockayne syndrome",
+      "Fanconi anemia complementation group Q",
+      "XFE progeroid syndrome",
+      "Xeroderma pigmentosum",
+      "Xeroderma pigmentosum, group F"
+    ]
+  },
+  "NOD2": {
+    "index": 30,
+    "pct_of_max": 34.866803629709615,
+    "max_score": 2.8518020968581257,
+    "min_score": 0.21278946646550545,
+    "avg_score": 0.8541819033289295,
+    "gene_score": 0.9943322370194638,
+    "phenotypes": [
+      "Autoinflammatory syndrome",
+      "Blau syndrome",
+      "Inflammatory bowel disease 1",
+      "Regional enteritis",
+      "Yao syndrome"
+    ]
+  }
+}
