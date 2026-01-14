@@ -3,6 +3,7 @@
 import requests
 import json
 from typing import Dict, Any, List
+import dcc.dcc_utils as dutils
 
 # COMPUTE LOGIC
 # - For each patient phenotype, hit this to get ranked list of phenotypes back, maybe take all top within 75% of top score?
@@ -17,30 +18,38 @@ from typing import Dict, Any, List
 
 
 # constants
-URL_PHENOTYPE_ENBEDDINGS = "https://api.kpndataregistry.org/api/search/phenotypes"
+# URL_PHENOTYPE_ENBEDDINGS = "https://api.kpndataregistry.org/api/search/phenotypes"
+URL_PHENOTYPE_ENBEDDINGS = "https://search.hugeamp.org/api/search/pgvector/phenotypes?q=diabetes&similarity_threshold=0.25&top_k=100"
 KEY_DATA = 'data'
 KEY_LOGS = 'logs'
 KEY_ID = 'id'
 KEY_DESCRIPTION = 'description'
 KEY_SCORE = 'score'
+logger = dutils.get_logger(__name__)
 
 
 # methods
-def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, percent: float=75.0, log: bool=False):
+def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, percent: float=75.0, num_results=100, log: bool=False):
     """
     Queries the KPN Data Registry phenotype API for a given search term.
     Returns a dictionary with id, description, group, and score.
     Ensures type safety and has a single return statement.
     """
     # initialize
-    url = "https://api.kpndataregistry.org/api/search/phenotypes"
-    params = {"q": term, "similarity_threshold": similarity_threshold}
+    # url = "https://api.kpndataregistry.org/api/search/phenotypes"
+    # params = {"q": term, "similarity_threshold": similarity_threshold}
+
+    # new setup
+    url = URL_PHENOTYPE_ENBEDDINGS
+    params = {"q": term, "similarity_threshold": similarity_threshold, "top_k": num_results}
     logs = []
     result = {KEY_DATA: [], KEY_LOGS: logs}  # initialize single return object
 
     try:
         # Perform GET request
+
         response = requests.get(url, params=params, timeout=10)
+        logger.info("querying: {} with paramas: {}".format(url, params))
         response.raise_for_status()  # Raise exception for HTTP errors
 
         # Parse JSON response
