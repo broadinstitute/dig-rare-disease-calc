@@ -19,8 +19,10 @@ import dcc.dcc_utils as dutils
 
 # constants
 # URL_PHENOTYPE_ENBEDDINGS = "https://api.kpndataregistry.org/api/search/phenotypes"
-URL_PHENOTYPE_ENBEDDINGS = "https://search.hugeamp.org/api/search/pgvector/phenotypes?q=diabetes&similarity_threshold=0.25&top_k=100"
-KEY_DATA = 'data'
+URL_PHENOTYPE_ENBEDDINGS = "https://search.hugeamp.org/api/search/pgvector/phenotypes"
+KEY_EMBEDDING_DATA = 'results'
+KEY_PIGEAN_DATA = 'data'
+KEY_RESULT_DATA = 'results'
 KEY_LOGS = 'logs'
 KEY_ID = 'id'
 KEY_DESCRIPTION = 'description'
@@ -43,7 +45,7 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, pe
     url = URL_PHENOTYPE_ENBEDDINGS
     params = {"q": term, "similarity_threshold": similarity_threshold, "top_k": num_results}
     logs = []
-    result = {KEY_DATA: [], KEY_LOGS: logs}  # initialize single return object
+    result = {KEY_EMBEDDING_DATA: [], KEY_LOGS: logs}  # initialize single return object
 
     try:
         # Perform GET request
@@ -57,7 +59,7 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, pe
 
         # Extract and type-cast relevant fields
         entries = []
-        for item in json_data.get(KEY_DATA, []):
+        for item in json_data.get(KEY_EMBEDDING_DATA, []):
             try:
                 entry = {
                     KEY_ID: str(item.get(KEY_ID, "")),
@@ -75,11 +77,12 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, pe
             top_score = max(e[KEY_SCORE] for e in entries)
             threshold = (float(percent) / 100.0) * top_score
             filtered = [e for e in entries if e[KEY_SCORE] >= threshold]
-            result[KEY_DATA] = sorted(filtered, key=lambda x: x[KEY_SCORE], reverse=True)
+            result[KEY_RESULT_DATA] = sorted(filtered, key=lambda x: x[KEY_SCORE], reverse=True)
 
             # log
             logs.append("using score cutoff of: {}".format(threshold))
-            logs.append("filter: {} to cutoff of: {}".format(len(entries), len(result[KEY_DATA])))
+            logs.append("filter: {} to cutoff of: {}".format(len(entries), len(result[KEY_RESULT_DATA])))
+            # logs.append("for phenotype: {}, got gwas results: {}".format(str, json.dumps(result, indent=2)))
 
         else:
             logs.append("No entries found in API response.")
@@ -94,7 +97,7 @@ def get_rest_phenotype_similarity(term: str, similarity_threshold: float=0.0, pe
     return result
 
 
-def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "Small", keep_frac: float = 0.75):
+def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "Small", keep_frac: float = 0.75, debug: bool=False):
     """
     Query the PIGEAn gene-phenotype endpoint for a phenotype term and return genes whose
     combined_D probability is within `keep_frac` of the top gene's score.
@@ -120,6 +123,11 @@ def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "
     # Candidate score keys in priority order (case-insensitive handling)
     candidate_keys = ["combined_D", "combined_d", "combined_proba", "combined"]
 
+    # log
+    if debug:
+        logger.info("query PIGEAN: {} with params: {}".format(url, params))
+
+    # REST query
     try:
         resp = requests.get(url, params=params, timeout=15)
         resp.raise_for_status()
@@ -132,7 +140,7 @@ def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "
 
         else:
             # Get list of dicts
-            items = payload.get("data", [])
+            items = payload.get(KEY_PIGEAN_DATA, [])
             if not isinstance(items, list):
                 items = []
 
@@ -179,6 +187,11 @@ def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "
                 kept.sort(key=lambda x: x["score"], reverse=True)
                 result["data"] = kept
 
+
+            # log
+            if debug:
+                print("for phenotype: {}, got genes/scores: {}".format(term, json.dumps(result)))
+
     except requests.exceptions.RequestException as e:
         logs.append(f"Request error: {e}")
 
@@ -186,10 +199,10 @@ def get_rest_genes_for_pigean_phenotype(term: str, sigma: int = 2, size: str = "
     return result
 
 
-def compute_weighted_gene_scores(
+def compute_weighted_gene_scores(phenotype: str,
     phenotypes_json: Dict,
-    pigean_results: Dict[str, Dict]
-) -> Dict[str, List[Dict]]:
+    pigean_results: Dict[str, Dict],
+    debug: bool=False) -> Dict[str, List[Dict]]:
     """
     Combine per-phenotype PIGEAn gene scores into weighted mean probabilities,
     weighted by normalized semantic similarity of phenotype to patient phenotype.
@@ -201,16 +214,16 @@ def compute_weighted_gene_scores(
     Returns:
         dict with:
           {
-            "data": [{"gene": "GENE1", "weighted_score": value}, ...],
+            "results": [{"gene": "GENE1", "weighted_score": value}, ...],
             "logs": [...]
           }
     """
     logs = []
-    result = {"data": [], "logs": logs}
+    result = {KEY_RESULT_DATA: [], "logs": logs}
 
     try:
         # --- Extract and normalize phenotype similarity scores ---
-        phenotype_entries = phenotypes_json.get("data", [])
+        phenotype_entries = phenotypes_json.get(KEY_RESULT_DATA, [])
         if not phenotype_entries:
             logs.append("No phenotype entries provided.")
             return result
@@ -228,7 +241,7 @@ def compute_weighted_gene_scores(
         combined_scores = {}
 
         for phenotype_id, weight in weights.items():
-            data_block = pigean_results.get(phenotype_id, {}).get("data", [])
+            data_block = pigean_results.get(phenotype_id, {}).get(KEY_PIGEAN_DATA, [])
             if not data_block:
                 logs.append(f"No gene data found for phenotype '{phenotype_id}'.")
                 continue
@@ -242,14 +255,19 @@ def compute_weighted_gene_scores(
 
                     # Accumulate weighted score
                     combined_scores[gene] = combined_scores.get(gene, 0.0) + score * weight
+
                 except (ValueError, TypeError):
                     logs.append(f"Skipping malformed gene entry in {phenotype_id}: {entry}")
 
         # --- Prepare sorted output ---
-        result["data"] = [
+        result[KEY_RESULT_DATA] = [
             {"gene": g, "weighted_score": s}
             for g, s in sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)
         ]
+
+        # log
+        if debug:
+            logger.info("for phenotype: {}, return weighted genes: {}".format(phenotype, result))
 
     except Exception as e:
         logs.append(f"Error computing weighted gene scores: {e}")
@@ -289,27 +307,31 @@ def process_patient_phenotypes(
 
     # build a map of the distinct pigean phenotypes and their gene scores
     for row_patient in map_patient_pigean_phenotypes.values():
-        for row_pigean in row_patient.get(KEY_DATA):
+        for row_pigean in row_patient.get(KEY_EMBEDDING_DATA):
             pigean_phenotype_id = row_pigean.get(KEY_ID)
+
+            if debug:
+                logger.info("querying PIGEAN phenotype: {}".format(pigean_phenotype_id))
+
+            # make sure the phenotype hasn't been queried yet
             if not map_pigean_phenotype_genes.get(pigean_phenotype_id):
-                map_pigean_phenotype_genes[pigean_phenotype_id] = get_rest_genes_for_pigean_phenotype(term=pigean_phenotype_id)
+                map_pigean_phenotype_genes[pigean_phenotype_id] = get_rest_genes_for_pigean_phenotype(term=pigean_phenotype_id, debug=debug)
 
     # for each patient phenotype, get the weighted gene scores
     for phenotype_patient in map_patient_pigean_phenotypes.keys():
-        map_patient_phenotype_gene_weights[phenotype_patient] = compute_weighted_gene_scores(phenotypes_json=map_patient_pigean_phenotypes.get(phenotype_patient), 
-                                                                                             pigean_results=map_pigean_phenotype_genes)
-    # debug log
+        map_patient_phenotype_gene_weights[phenotype_patient] = compute_weighted_gene_scores(phenotype=phenotype_patient,
+                                                                                             phenotypes_json=map_patient_pigean_phenotypes.get(phenotype_patient), 
+                                                                                             pigean_results=map_pigean_phenotype_genes, debug=debug)
+    # log
     if debug:
-        print("got patient phenotype to gene map: \n{}".format(json.dumps(map_patient_phenotype_gene_weights, indent=2)))
+        logger.info("got patient phenotype to gene map: \n{}".format(json.dumps(map_patient_phenotype_gene_weights, indent=2)))
 
-    # TODO: return 2 lists
+    # TODO: return 2 lists (different calculation for each one)
     return map_patient_phenotype_gene_weights
 
 
-from typing import Dict, Any
-import json
 
-def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], default_prob: float = 0.05) -> Dict[str, Any]:
+def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], default_prob: float = 0.05, debug: bool=False) -> Dict[str, Any]:
     """
     Given a mapping of phenotype -> list of genes with weighted_score,
     returns two aggregated patient-level gene lists:
@@ -325,14 +347,16 @@ def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], defau
         phenotype_genes = {}  # phenotype -> {gene: score}
         for phenotype, pdata in phenotype_gene_map.items():
             pgenes = {}
-            for entry in pdata.get("data", []):
+            for entry in pdata.get(KEY_RESULT_DATA, []):
                 try:
                     gene = str(entry.get("gene", "")).strip()
                     score = float(entry.get("weighted_score", 0.0))
                     if gene:
                         pgenes[gene] = score
+
                 except (ValueError, TypeError):
                     logs.append(f"Skipping malformed entry in {phenotype}: {entry}")
+                    
             phenotype_genes[phenotype] = pgenes
 
         if not phenotype_genes:
@@ -367,7 +391,10 @@ def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], defau
             for g, s in sorted(avg_scores.items(), key=lambda x: x[1], reverse=True)
         ]
 
-        logs.append(f"Processed {len(phenotype_genes)} phenotypes, {len(all_genes)} unique genes.")
+        # log
+        log_message = f"Processed {len(phenotype_genes)} phenotypes, {len(all_genes)} unique genes."
+        logger.info(log_message)
+        logs.append(log_message)
 
     except Exception as e:
         logs.append(f"Error combining gene probabilities: {e}")
@@ -377,7 +404,7 @@ def combine_patient_gene_probabilities(phenotype_gene_map: Dict[str, Any], defau
 
 
 def process_web_patient_phenotypes(
-    list_input_phenotypes: List[str], debug: bool=False) -> Dict[str, List[Dict]]:
+    list_input_phenotypes: List[str], debug: bool=True) -> Dict[str, List[Dict]]:
     '''
     handles the list of phenotypes from the REST call
     '''
@@ -385,7 +412,10 @@ def process_web_patient_phenotypes(
     map_patient_result = process_patient_phenotypes(list_input_phenotypes=list_input_phenotypes, debug=debug)
 
     # get the two genes lists from the above result
-    map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result)
+    map_gene_scores = combine_patient_gene_probabilities(phenotype_gene_map=map_patient_result, debug=debug)
+
+    # log
+    logger.info("for input phenotype list: {}, got weighted gene results: {}".format(list_input_phenotypes, json.dumps(map_gene_scores, indent=2)))
 
     # return
     return map_gene_scores
